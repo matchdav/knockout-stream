@@ -13,9 +13,9 @@ module.exports = function (ko) {
 			//just push it out
 			this.queue(data);
 
-			//if the observable different, let it be known
+			//if the observable is being written to from the stream, emit a change event.
 			if(_this()!==data) {
-				console.log('changing!')
+
 				this.emit('change',data);
 
 				//and also write it.  (duplexing is fun)
@@ -23,10 +23,10 @@ module.exports = function (ko) {
 			}
 
 		});
+
 		stream.write(_this());
 
 		_this.subscribe(function feedStream(data) {
-			stream.emit('change',data);
 			stream.write(data);
 		});
 
