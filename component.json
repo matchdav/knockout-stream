@@ -1,0 +1,16 @@
+{
+  "name": "knockout-stream",
+  "repo": "matchdav/knockout-stream",
+  "description": "streams for knockout",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {
+    "juliangruber/through": "v1.1.0"
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ]
+}
