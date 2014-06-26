@@ -1,0 +1,30 @@
+<html>
+<head>
+	<title>knockout stream test</title>
+	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="
+//cdnjs.cloudflare.com/ajax/libs/mocha/1.20.1/mocha.css">
+</head>
+<body>
+	<div id="mocha"></div>
+	<div class="container">
+		
+		<div id="testform">
+			<input data-bind="value:obs"/>
+			<select data-bind="options:obsArray"></select>
+		</div>
+
+		<div id="output">
+		</div>
+	</div>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mocha/1.20.1/mocha.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/chai/1.9.1/chai.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
+	<script type="text/javascript">mocha.setup('bdd'); var should = chai.should();console.log(chai)</script>
+	<script type="text/javascript" src="/build/build.js"></script>
+	<script type="text/javascript" src="/test/mock.js"></script>
+	<script type="text/javascript" src="/test/index.js"></script>
+	<script type="text/javascript">mocha.run()</script>
+
+</body>
+</html>
