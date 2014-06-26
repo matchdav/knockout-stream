@@ -6,9 +6,19 @@ var output = document.querySelector('#output');
 
 var obsArrayChannel = model.obsArray.toStream();
 
-obsChannel.pipe(through(function write(data){
+var caps = through(function write(data){
 	output.innerHTML = data.toUpperCase();
-}));
+	this.queue(data);
+});
+
+var pushCaps = through(function write(data){
+	console.log('got',data);
+	this.queue(data);
+});
+
+obsChannel.pipe(caps);
+
+obsArrayChannel.pipe(pushCaps);
 
 describe('environment',function(){
 	it('#require',function(){
@@ -37,6 +47,19 @@ describe('observableStream',function(){
 	});
 
 	it('the stream should be transformable',function(){
+		model.obs('hello');
+		output.innerHTML.should.eql('HELLO');
+	});
+});
 
+describe('observable array stream',function(){
+	it('should listen to array changes',function(done){
+		var count = 0;
+		obsArrayChannel.on('data',function(){
+			count ++;
+			if(count > 1) done();
+		});
+		model.obsArray.push('carrots are for vegans');
+		model.obsArray.push('rabbits are for being gnawed by');
 	});
 });

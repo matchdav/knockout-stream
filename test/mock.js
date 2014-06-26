@@ -1,6 +1,6 @@
 function vm() {
-	this.obs = ko.observable('my name is joe');
-	this.obsArray = ko.observableArray(['rob','jarrod','kelly']);
+	this.obs = ko.observable('my name is bunnicula');
+	this.obsArray = ko.observableArray(['angry','rabbit','has','diabetes']);
 }
 
 var model = new vm();

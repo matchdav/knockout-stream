@@ -15,6 +15,7 @@ module.exports = function (ko) {
 
 			//if the observable different, let it be known
 			if(_this()!==data) {
+				console.log('changing!')
 				this.emit('change',data);
 
 				//and also write it.  (duplexing is fun)
@@ -23,6 +24,7 @@ module.exports = function (ko) {
 
 		});
 		stream.write(_this());
+
 		_this.subscribe(function feedStream(data) {
 			stream.emit('change',data);
 			stream.write(data);
