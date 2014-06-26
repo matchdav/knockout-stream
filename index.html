@@ -6,15 +6,56 @@
 //cdnjs.cloudflare.com/ajax/libs/mocha/1.20.1/mocha.css">
 </head>
 <body>
-	<div id="mocha"></div>
 	<div class="container">
-		
-		<div id="testform">
-			<input data-bind="value:obs"/>
-			<select data-bind="options:obsArray"></select>
-		</div>
+		<h4>Setup</h4>
+		<pre><code>
+function vm() {
+	this.observableObject = ko.observable('my name is bunnicula');
+	this.observableCollection = ko.observableArray(['angry','rabbit','has','diabetes']);
+}
 
-		<div id="output">
+var model = new vm();
+
+ko.applyBindings(model,document.querySelector("#testform"));
+
+
+var through = require('through');
+(require('knockout-stream')(ko));
+
+var observableChannel = model.observableObject.toStream();
+var output = document.querySelector('#output');
+
+var observableCollectionChannel = model.observableCollection.toStream();
+
+var caps = through(function write(data){
+	output.innerHTML = data.toUpperCase();
+	this.queue(data);
+});
+
+var pushCaps = through(function write(data){
+	console.log('got',data);
+	this.queue(data);
+});
+
+observableChannel.pipe(caps);
+
+observableCollectionChannel.pipe(pushCaps);
+
+		</code></pre>
+		<div id="mocha"></div>
+		<h4>Test form</h4>
+		<div id="testform" class="panel">
+			<form class="custom">
+			<p><label>You can type in this box and it will change below</label>
+						<input data-bind="value:observableObject" class="form-control"/></p>
+			<label>Now here you can push an item onto a ko array</label>
+			<input class="form-control" id="streamInput" />
+			<select data-bind="options:observableCollection"></select>
+			</form>
+		</div>
+		<h4>Output from transform stream (no ko binding)</h4>
+		<div class="jumbotron">
+			<h2 id="output"></h2>
 		</div>
 	</div>
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mocha/1.20.1/mocha.js"></script>

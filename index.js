@@ -24,10 +24,10 @@ module.exports = function (ko) {
 
 		});
 
-		stream.write(_this());
+		stream.emit('data',_this());
 
 		_this.subscribe(function feedStream(data) {
-			stream.write(data);
+			stream.emit('data',data);
 		});
 
 		return stream;

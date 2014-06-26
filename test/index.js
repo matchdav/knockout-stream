@@ -1,24 +1,46 @@
 var through = require('through');
 (require('knockout-stream')(ko));
 
-var obsChannel = model.obs.toStream();
+var observableChannel = model.observableObject.toStream();
 var output = document.querySelector('#output');
 
-var obsArrayChannel = model.obsArray.toStream();
+var observableCollectionChannel = model.observableCollection.toStream();
 
 var caps = through(function write(data){
 	output.innerHTML = data.toUpperCase();
 	this.queue(data);
 });
 
+var rip = Function.prototype.bind.bind(Function.prototype.call);
+
+var uppercase = rip(String.prototype.toUpperCase);
+
 var pushCaps = through(function write(data){
-	console.log('got',data);
+	data = data.map(uppercase);
 	this.queue(data);
 });
 
-obsChannel.pipe(caps);
+var streamInput = document.getElementById('streamInput');
+var inputStream = through();
 
-obsArrayChannel.pipe(pushCaps);
+streamInput.onchange = function() {
+	inputStream.write(this.value);
+	this.value='';
+};
+
+inputStream.pipe(through(function write(str){
+
+	this.queue(uppercase(str));
+
+})).pipe(through(function(data){
+
+	model.observableCollection.push(data);
+
+}));
+
+observableChannel.pipe(caps);
+
+observableCollectionChannel.pipe(pushCaps);
 
 describe('environment',function(){
 	it('#require',function(){
@@ -35,40 +57,40 @@ describe('environment',function(){
 describe('observableStream',function(){
 
 	it('should pipe data immediately',function(){
-		model.obs('hi');
+		model.observableObject('hi');
 		output.innerHTML.should.be.ok;
 	});
 
 	it('should emit data events',function(done){
-		obsChannel.on('data',function(){
+		observableChannel.on('data',function(){
 			done();
 		});
-		model.obs('I am done');
+		model.observableObject('I am done');
 	});
 
 	it('the stream should be transformable',function(){
-		model.obs('hello');
+		model.observableObject('hello');
 		output.innerHTML.should.eql('HELLO');
 	});
 	it('should be writable',function(){
 		var str = through(function write(data){
 			this.queue(data + ' - no, srsly');
 		});
-		str.pipe(obsChannel)
+		str.pipe(observableChannel)
 		str.write('my name is rabbit food');
-		(model.obs()).should.equal('my name is rabbit food - no, srsly');
+		(model.observableObject()).should.equal('my name is rabbit food - no, srsly');
 	})
 });
 
 describe('observable array stream',function(){
 	it('should listen to array changes',function(done){
 		var count = 0;
-		obsArrayChannel.on('data',function(){
+		observableCollectionChannel.on('data',function(){
 			count ++;
 			if(count > 1) done();
 		});
-		model.obsArray.push('carrots are for vegans');
-		model.obsArray.push('rabbits are for being gnawed by');
+		model.observableCollection.push('carrots are for vegans');
+		model.observableCollection.push('rabbits are for being gnawed by');
 	});
 
 	it('should also be writable',function(done){
@@ -77,12 +99,12 @@ describe('observable array stream',function(){
 		
 
 		//the change event only fires on writes to an observable
-		obsArrayChannel.on('change',function(){
+		observableCollectionChannel.on('change',function(){
 			done();
 		});
 
-		arr.pipe(obsArrayChannel);
+		arr.pipe(observableCollectionChannel);
 		arr.write(['my dog is secretly a rabbit']);
-		model.obsArray().length.should.equal(1);
+		model.observableCollection().length.should.equal(1);
 	});
 });
