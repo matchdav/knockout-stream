@@ -9,9 +9,23 @@
 
     $ component install matchdav/knockout-stream
 
+or
+
+    $ npm install knockout-stream
+
 ## API
 
+uses through.
 
+```
+var obs = ko.observable();
+var obstream = obs.toStream();
+
+obstream.pipe(tohere);
+fromthere.pipe(obstream);
+//etc
+
+```
 
 ## License
 

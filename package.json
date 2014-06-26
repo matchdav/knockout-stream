@@ -1,6 +1,6 @@
 {
   "name": "knockout-stream",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "streams for knockout",
   "main": "index.js",
   "scripts": {
