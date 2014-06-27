@@ -32,10 +32,32 @@ var caps = through(function write(data){
 	this.queue(data);
 });
 
+var rip = Function.prototype.bind.bind(Function.prototype.call);
+
+var uppercase = rip(String.prototype.toUpperCase);
+
 var pushCaps = through(function write(data){
-	console.log('got',data);
+	data = data.map(uppercase);
 	this.queue(data);
 });
+
+var streamInput = document.getElementById('streamInput');
+var inputStream = through();
+
+streamInput.onchange = function() {
+	inputStream.write(this.value);
+	this.value='';
+};
+
+inputStream.pipe(through(function write(str){
+
+	this.queue(uppercase(str));
+
+})).pipe(through(function(data){
+
+	model.observableCollection.push(data);
+
+}));
 
 observableChannel.pipe(caps);
 
@@ -51,6 +73,7 @@ observableCollectionChannel.pipe(pushCaps);
 			<label>Now here you can push an item onto a ko array</label>
 			<input class="form-control" id="streamInput" />
 			<select data-bind="options:observableCollection"></select>
+			<label id="lengthStreamOutput"></label>
 			</form>
 		</div>
 		<h4>Output from transform stream (no ko binding)</h4>
@@ -61,11 +84,16 @@ observableCollectionChannel.pipe(pushCaps);
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mocha/1.20.1/mocha.js"></script>
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/chai/1.9.1/chai.js"></script>
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
-	<script type="text/javascript">mocha.setup('bdd'); var should = chai.should();</script>
+	<script type="text/javascript">
+		mocha.setup('bdd'); 
+		var should = chai.should();
+	</script>
 	<script type="text/javascript" src="/build/build.js"></script>
 	<script type="text/javascript" src="/test/mock.js"></script>
 	<script type="text/javascript" src="/test/index.js"></script>
-	<script type="text/javascript">mocha.run()</script>
+	<script type="text/javascript">
+		mocha.run()
+	</script>
 
 </body>
 </html>

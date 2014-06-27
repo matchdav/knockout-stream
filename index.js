@@ -1,5 +1,19 @@
 var through = require('through');
 
+/*
+	
+	TO DO 
+
+	* separate stream types for each observable type, as they all behave differently.
+	* ko.observableArray.fn
+	* ko.subscribable.fn
+	* ko.observable.fn
+	* ko.computed.fn
+
+
+
+ */
+
 module.exports = function (ko) {
 
 	function toStream() {
@@ -7,9 +21,9 @@ module.exports = function (ko) {
 		//the observable context
 		var _this = this;
 
-
+		
 		var stream = through(function write (data) {
-
+			
 			//just push it out
 			this.queue(data);
 
