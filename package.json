@@ -21,6 +21,9 @@
   },
   "homepage": "https://github.com/matchdav/knockout-stream",
   "devDependencies": {
-    "knockout": "^3.1.0"
+    "knockout": "^3.1.0",
+    "gulp-component": "^0.1.8",
+    "gulp": "^3.8.3",
+    "gulp-connect": "^2.0.5"
   }
 }
