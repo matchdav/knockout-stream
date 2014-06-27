@@ -6,6 +6,8 @@ var output = document.querySelector('#output');
 
 var observableCollectionChannel = model.observableCollection.toStream();
 
+var observableComputedStream = model.observableComputedLength.toStream();
+
 var caps = through(function write(data){
 	output.innerHTML = data.toUpperCase();
 	this.queue(data);
@@ -37,7 +39,12 @@ inputStream.pipe(through(function write(str){
 	model.observableCollection.push(data);
 
 }));
-
+var lengthStreamOutput = document.getElementById('lengthStreamOutput');
+var length = through(function(data){
+	console.log(data);
+	lengthStreamOutput.innerHTML = data;
+});
+observableComputedStream.pipe(length);
 observableChannel.pipe(caps);
 
 observableCollectionChannel.pipe(pushCaps);
