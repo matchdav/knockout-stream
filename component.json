@@ -2,10 +2,10 @@
   "name": "knockout-stream",
   "repo": "matchdav/knockout-stream",
   "description": "streams for knockout",
-  "version": "v0.1",
+  "version": "v0.1.1",
   "keywords": [],
   "dependencies": {
-    "juliangruber/through": "v1.1.0"
+    "matchdav/through": "v1.1.0"
   },
   "development": {},
   "license": "MIT",
